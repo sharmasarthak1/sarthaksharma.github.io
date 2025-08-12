@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Professional Profile</title>
+  <meta name="description" content="Corporate, print‑ready résumé site that hydrates from a JSON export of your LinkedIn data. 100% client‑side; GitHub Pages‑friendly." />  <!-- SEO / Structured Data (basic Person schema) -->  <script type="application/ld+json" id="person-schema"></script>  <style>
+    :root{
+      --bg: #0b1020;           /* page background */
+      --card: #0f162e;         /* surface */
+      --text: #e6ebff;         /* primary text */
+      --muted: #9fb0ff;        /* secondary text */
+      --accent: #51a1ff;       /* brand */
+      --accent-2:#4ce3c2;      /* secondary brand */
+      --line: #2a3763;         /* dividers */
+      --chip: #172245;         /* tag bg */
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f7fb; --card:#ffffff; --text:#0f162e; --muted:#4c5a88; --line:#e8ecf6; --chip:#f2f5ff; }
+    }
+
+    *{ box-sizing: border-box }
+    html,body{ height: 100% }
+    body{
+      margin:0; font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 20% -10%, #1a2b6b22, transparent), var(--bg);
+      color: var(--text);
+    }
+
+    .max{ max-width: 1080px; margin: 48px auto; padding: 0 20px }
+
+    header.hero{
+      display:grid; grid-template-columns: 120px 1fr; gap: 24px; align-items:center;
+      background: linear-gradient(180deg, #0d1532, #0b1020); border: 1px solid var(--line); border-radius: 18px; padding: 20px; box-shadow: 0 10px 30px #00000040;
+    }
+    header.hero img{
+      width: 120px; height: 120px; border-radius: 16px; object-fit: cover; border: 2px solid #3a56ff44; background:#0a0f1f;
+    }
+    .title{ display:flex; flex-wrap:wrap; align-items:baseline; gap: 12px }
+    .title h1{ margin: 0; font-size: 30px; letter-spacing:.2px }
+    .title .role{ color: var(--muted) }
+
+    .badges{ display:flex; flex-wrap: wrap; gap: 8px; margin-top: 10px }
+    .chip{ padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--chip); color: var(--muted); font-weight: 600; }
+
+    .meta{ display:flex; gap:18px; color: var(--muted); margin-top: 8px; flex-wrap:wrap }
+    .meta a{ color: var(--accent); text-decoration:none }
+
+    main{ margin-top: 28px; display:grid; grid-template-columns: 2fr 1fr; gap: 24px }
+    @media (max-width: 980px){ main{ grid-template-columns: 1fr } }
+
+    .card{ background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; box-shadow: 0 16px 36px #0000003a; }
+    .card h2{ margin: 0 0 8px 0; font-size: 18px; letter-spacing:.3px }
+    .section + .section{ margin-top: 12px }
+
+    .row{ display:grid; grid-template-columns: 1fr auto; gap: 12px; padding: 14px 0; border-top: 1px dashed var(--line) }
+    .row:first-child{ border-top: none }
+    .row h3{ margin:0; font-size: 16px }
+    .row .org{ color: var(--muted); font-weight: 600 }
+    .row .dates{ color: var(--muted) }
+    .row p{ margin: 6px 0 0; color: var(--text) }
+
+    .skills{ display:flex; flex-wrap: wrap; gap: 8px }
+
+    footer{ color: var(--muted); text-align:center; margin: 28px 0 }
+
+    /* Sticky nav */
+    .toolbar{
+      position: sticky; top: 10px; z-index: 2; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; margin-bottom: 10px;
+    }
+    .btn{ border-radius: 10px; border: 1px solid var(--line); background: var(--chip); color: var(--text); padding: 8px 12px; cursor:pointer; font-weight:600 }
+    .btn:hover{ outline:2px solid #3a56ff33 }
+
+    /* Print styles */
+    @media print{
+      body{ background:#fff }
+      header.hero, .card{ box-shadow:none; border-color:#dfe3f0 }
+      .toolbar{ display:none }
+    }
+
+    /* Skeleton */
+    .skeleton{ background: linear-gradient(90deg,#ffffff10,#ffffff25,#ffffff10); background-size: 200% 100%; animation: shine 1.2s infinite; border-radius: 8px }
+    @keyframes shine{ 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  </style></head>
+<body>
+  <div class="max">
+    <div class="toolbar">
+      <label class="btn" for="jsonFile">Upload LinkedIn JSON</label>
+      <input id="jsonFile" type="file" accept="application/json" style="display:none" />
+      <button class="btn" id="printBtn" title="Print / Save as PDF">Print</button>
+      <button class="btn" id="downloadBtn" title="Download current JSON">Download JSON</button>
+    </div><header class="hero">
+  <div>
+    <img id="avatar" alt="Profile photo" class="skeleton" />
+  </div>
+  <div>
+    <div class="title">
+      <h1 id="fullName" class="skeleton" style="height:34px;width:260px"></h1>
+      <div id="headline" class="role skeleton" style="height:20px;width:280px"></div>
+    </div>
+    <div class="badges" id="badges"></div>
+    <div class="meta">
+      <div id="location" class="skeleton" style="height:18px;width:160px"></div>
+      <div>LinkedIn: <a id="linkedinUrl" target="_blank" rel="noopener">view</a></div>
+      <div id="emailWrap" style="display:none">Email: <a id="emailLink"></a></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card" id="experienceCard">
+    <h2>Experience</h2>
+    <div id="experience" class="section"></div>
+  </section>
+
+  <section class="card" id="sidebar">
+    <h2>Core Skills</h2>
+    <div class="skills" id="skills"></div>
+    <hr style="border:none;border-top:1px dashed var(--line);margin:16px 0">
+    <h2>Education</h2>
+    <div id="education" class="section"></div>
+    <hr style="border:none;border-top:1px dashed var(--line);margin:16px 0">
+    <h2>Certifications</h2>
+    <div id="certs" class="section"></div>
+  </section>
+</main>
+
+<footer>
+  <small>Built with vanilla HTML/CSS/JS. Hydrates from a JSON export of your LinkedIn profile. No servers. No trackers.</small>
+</footer>
+
+  </div>  <script>
+    /**
+     * ✅ HOW THIS WORKS (client‑only)
+     * 1) Export your LinkedIn data (Settings → Data privacy → Get a copy → "Download larger data archive").
+     * 2) From the ZIP, locate a file with your profile data (e.g., \"Profile.json\" or assemble your own JSON).
+     * 3) Save a simplified JSON named /profile.json in your repo, shaped like the schema below.
+     * 4) This page fetches /profile.json on load. You can also pass ?data=<URL> to load from anywhere public
+     *    OR click "Upload LinkedIn JSON" to load locally at runtime (no network).
+     *
+     * Minimal schema expected by this page (keys are illustrative, extra fields ignored):
+     * {
+     *   "fullName": "Sarthak Sharma",
+     *   "headline": "B.Tech CSE (AI & ML) | Aspiring Data Scientist",
+     *   "location": "Aligarh, Uttar Pradesh, India",
+     *   "avatarUrl": "./assets/avatar.jpg",
+     *   "linkedinUrl": "https://www.linkedin.com/in/username",
+     *   "email": "me@example.com",
+     *   "skills": ["Python", "C++", "Machine Learning", "Data Visualization"],
+     *   "badges": ["CGPA: 9.3", "AICTE Intern", "Lifelong Learner"],
+     *   "experience": [
+     *     {"title":"AI & Data Analytics Intern","org":"AICTE","location":"Remote","start":"2025-06","end":"Present","bullets":[
+     *       "Worked on data visualization and sustainable tech initiatives",
+     *       "Hands-on with ML basics"
+     *     ]}
+     *   ],
+     *   "education": [
+     *     {"school":"KIET Group of Institutions","degree":"B.Tech, Computer Engineering","start":"2024-01","end":"Present"},
+     *     {"school":"D.S.S.M. Inter College, Kasimpur Power House","degree":"Senior Secondary","start":"2022-01","end":"2024-01"}
+     *   ],
+     *   "certifications": [
+     *     {"name":"Technology‑Based Survey for Community Welfare","issuer":"Coding Devs","date":"2025-08"},
+     *     {"name":"AI for Beginners","issuer":"HP LIFE","date":"2025-06","url":"#"}
+     *   ]
+     * }
+     */
+
+    const el = sel => document.querySelector(sel);
+    const $ = {
+      avatar: el('#avatar'), fullName: el('#fullName'), headline: el('#headline'), badges: el('#badges'),
+      location: el('#location'), linkedinUrl: el('#linkedinUrl'), emailWrap: el('#emailWrap'), emailLink: el('#emailLink'),
+      exp: el('#experience'), edu: el('#education'), certs: el('#certs'), skills: el('#skills')
+    };
+
+    const urlParam = new URLSearchParams(location.search).get('data');
+    const DEFAULT_JSON = 'profile.json';
+    let currentJson = null; // cache for download
+
+    async function load(url){
+      try{
+        const res = await fetch(url, {cache:'no-store'});
+        if(!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+        const data = await res.json();
+        hydrate(data);
+        currentJson = data;
+      }catch(err){
+        console.warn('Failed to auto‑load JSON. Falling back to badge mode.', err);
+        fallbackToLinkedInBadge();
+      }
+    }
+
+    function fmtDates(start, end){
+      const f = s => !s ? '' : (s.length===7? s : s.slice(0,7));
+      const s = f(start), e = f(end);
+      if(!s && !e) return '';
+      return `${s || ''} – ${e || 'Present'}`;
+    }
+
+    function chip(text){
+      const c = document.createElement('span');
+      c.className = 'chip'; c.textContent = text; return c;
+    }
+
+    function hydrate(d){
+      // Header
+      if(d.avatarUrl){ $.avatar.src = d.avatarUrl; $.avatar.classList.remove('skeleton'); }
+      $.fullName.textContent = d.fullName || '';
+      $.fullName.classList.remove('skeleton');
+      $.headline.textContent = d.headline || '';
+      $.headline.classList.remove('skeleton');
+      $.location.textContent = d.location || '';
+      if(d.linkedinUrl){ $.linkedinUrl.href = d.linkedinUrl; $.linkedinUrl.textContent = d.linkedinUrl.replace(/^https?:\/\//,''); }
+      if(d.email){ $.emailWrap.style.display = 'inline'; $.emailLink.href = `mailto:${d.email}`; $.emailLink.textContent = d.email; }
+
+      // Badges & Skills
+      $.badges.innerHTML = '';
+      (d.badges || []).forEach(b => $.badges.appendChild(chip(b)));
+      $.skills.innerHTML = '';
+      (d.skills || []).forEach(s => $.skills.appendChild(chip(s)));
+
+      // Experience
+      $.exp.innerHTML = '';
+      (d.experience || []).forEach(item => {
+        const row = document.createElement('div'); row.className = 'row';
+        row.innerHTML = `
+          <div>
+            <h3>${item.title || ''}</h3>
+            <div class="org">${item.org || ''}${item.location? ' • ' + item.location : ''}</div>
+            ${Array.isArray(item.bullets) ? `<p>• ${item.bullets.join('<br>• ')}</p>` : ''}
+          </div>
+          <div class="dates">${fmtDates(item.start, item.end)}</div>`;
+        $.exp.appendChild(row);
+      });
+
+      // Education
+      $.edu.innerHTML = '';
+      (d.education || []).forEach(item => {
+        const row = document.createElement('div'); row.className = 'row';
+        row.innerHTML = `
+          <div>
+            <h3>${item.school || ''}</h3>
+            <div class="org">${item.degree || ''}</div>
+          </div>
+          <div class="dates">${fmtDates(item.start, item.end)}</div>`;
+        $.edu.appendChild(row);
+      });
+
+      // Certifications
+      $.certs.innerHTML = '';
+      (d.certifications || []).forEach(c => {
+        const row = document.createElement('div'); row.className = 'row';
+        const link = c.url ? `<a href="${c.url}" target="_blank" rel="noopener">Show Credential</a>` : '';
+        row.innerHTML = `
+          <div>
+            <h3>${c.name || ''}</h3>
+            <div class="org">${c.issuer || ''} ${link? ' • ' + link : ''}</div>
+          </div>
+          <div class="dates">${c.date || ''}</div>`;
+        $.certs.appendChild(row);
+      });
+
+      // Schema.org block for SEO
+      const person = {
+        '@context': 'https://schema.org', '@type':'Person',
+        name: d.fullName, jobTitle: d.headline, image: d.avatarUrl, sameAs: d.linkedinUrl,
+        email: d.email || undefined, address: d.location || undefined,
+        knowsAbout: d.skills
+      };
+      document.getElementById('person-schema').textContent = JSON.stringify(person);
+    }
+
+    function fallbackToLinkedInBadge(){
+      // Minimal, privacy‑respecting badge (if user provided linkedinUrl)
+      const url = new URLSearchParams(location.search).get('linkedin');
+      if(!url){
+        $.headline.textContent = 'Add a profile.json or ?data=<url>'; $.headline.classList.remove('skeleton');
+        $.fullName.textContent = 'Your Name'; $.fullName.classList.remove('skeleton');
+        return;
+      }
+      $.linkedinUrl.href = url; $.linkedinUrl.textContent = url.replace(/^https?:\/\//,'');
+      $.headline.classList.remove('skeleton'); $.fullName.classList.remove('skeleton');
+    }
+
+    // File upload path (no network; keeps GH Pages fully static)
+    document.getElementById('jsonFile').addEventListener('change', async (e)=>{
+      const file = e.target.files?.[0]; if(!file) return;
+      const text = await file.text();
+      try{ const data = JSON.parse(text); hydrate(data); currentJson = data; }
+      catch(err){ alert('Invalid JSON file.'); }
+    });
+
+    // Print / Save to PDF
+    document.getElementById('printBtn').addEventListener('click', ()=> window.print());
+
+    // Download current JSON
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      if(!currentJson){ alert('No JSON data loaded yet.'); return; }
+      const blob = new Blob([JSON.stringify(currentJson, null, 2)], {type:'application/json'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'profile.json'; a.click();
+    });
+
+    // Kickoff: try URL param then default path
+    load(urlParam || DEFAULT_JSON);
+  </script></body>
+</html>
