@@ -1,0 +1,99 @@
+{
+  "fullName": "Sarthak Sharma",
+  "headline": "B.Tech CSE (AI & ML) | KIET'28 | Aspiring Data Scientist | CGPA: 9.3 | @intern AI & Data Analytics – AICTE–Shell | Virtual Intern – Forage | C, C++, Python, ML | Lifelong Learner",
+  "location": "Aligarh, Uttar Pradesh, India",
+  "avatarUrl": "./assets/sarthak.jpg",
+  "linkedinUrl": "https://www.linkedin.com/in/sarthaksharmakiet",
+  "skills": [
+    "C",
+    "C++",
+    "Python",
+    "Machine Learning",
+    "Data Visualization",
+    "AI",
+    "Data Analytics"
+  ],
+  "badges": [
+    "CGPA: 9.3",
+    "AICTE–Shell Intern",
+    "Lifelong Learner"
+  ],
+  "experience": [
+    {
+      "title": "AI & Data Analytics Intern",
+      "org": "All India Council for Technical Education (AICTE)",
+      "location": "",
+      "start": "2025-06",
+      "end": "Present",
+      "bullets": [
+        "Completed a 4-week virtual internship under the AICTE–Shell–Edunet Skills4Future Program.",
+        "Worked on real-world applications of Artificial Intelligence and Data Analytics focused on Green Skills.",
+        "Gained hands-on experience in data visualization, machine learning basics, and sustainable tech initiatives."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "KIET Group of Institutions",
+      "degree": "B.Tech, Computer Engineering",
+      "start": "2024-01",
+      "end": "Present"
+    },
+    {
+      "school": "D.s.s.m. inter college, Kasimpur power house (Aligarh)",
+      "degree": "",
+      "start": "2022-01",
+      "end": "2024-01"
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Technology-Based Survey for Community Welfare",
+      "issuer": "Coding Devs",
+      "date": "2025-08",
+      "url": ""
+    },
+    {
+      "name": "AI for beginners",
+      "issuer": "HP LIFE",
+      "date": "2025-06",
+      "url": ""
+    },
+    {
+      "name": "Introduction to Machine Learning Concept",
+      "issuer": "Microsoft",
+      "date": "2025-06",
+      "url": ""
+    },
+    {
+      "name": "Deloitte Australia - Data Analytics Job Simulation",
+      "issuer": "Forage",
+      "date": "2025-02",
+      "url": ""
+    },
+    {
+      "name": "Pearson MePro Level 7 Progressive",
+      "issuer": "Pearson",
+      "date": "2024-12",
+      "url": ""
+    },
+    {
+      "name": "IoT tech innovation: embedded for smart future",
+      "issuer": "Udemy",
+      "date": "2024-11",
+      "url": ""
+    },
+    {
+      "name": "Chatgpt",
+      "issuer": "GUVI Geek Networks, IITM Research Park",
+      "date": "2024-10",
+      "url": ""
+    },
+    {
+      "name": "Machine learning",
+      "issuer": "GUVI Geek Networks, IITM Research Park",
+      "date": "2024-10",
+      "url": ""
+    }
+  ]
+}
